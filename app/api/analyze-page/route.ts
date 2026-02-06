@@ -7,7 +7,7 @@ const anthropic = new Anthropic({
 })
 
 interface PageAnalysisRequest {
-  pageContent: string | { text: string; metadata?: Record<string, string>; [key: string]: unknown }
+  pageContent: string | { text: string; type?: string; metadata?: Record<string, string>; [key: string]: unknown }
   pageUrl: string
   pageTitle: string
   generateOutreach?: boolean
@@ -15,7 +15,8 @@ interface PageAnalysisRequest {
 
 const ANALYSIS_PROMPT = `Analiziraj sadržaj ove web stranice i izvuci ključne informacije za sales tim.
 
-STRANICA: {url}
+TIP STRANICE: {pageType}
+URL: {url}
 NASLOV: {title}
 
 SADRŽAJ:
@@ -23,15 +24,20 @@ SADRŽAJ:
 
 ---
 
+KONTEKST PO TIPU STRANICE:
+- linkedin_job / hiring_page: Izvuci tražene veštine, tehnologije, senioritet. Potrebe = šta traže.
+- linkedin_company / company_about / company_homepage: Izvuci industriju, veličinu, servise. Potrebe = gde možemo pomoći.
+- linkedin_profile: Izvuci ime, poziciju, kompaniju. Potrebe = šta ta osoba može trebati.
+
 Tvoj zadatak:
-1. Izvuci ključne informacije o kompaniji/osobi na stranici
-2. Identifikuj njihove potrebe, tehnologije, industriju
-3. Predloži ključne reči za pretragu naše baze
+1. Izvuci ključne informacije relevantne za tip stranice
+2. Identifikuj potrebe, tehnologije, industriju
+3. Predloži ključne reči za pretragu naše baze kapaciteta
 
 Vrati JSON format:
 {
   "signals": "Kratak opis šta si pronašao (1-2 rečenice)",
-  "company": "Ime kompanije ako postoji",
+  "company": "Ime kompanije",
   "person": "Ime osobe ako postoji",
   "role": "Pozicija osobe ako postoji",
   "industry": "Industrija",
@@ -92,13 +98,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Page content is required' }, { status: 400 })
     }
 
-    // Extract text content
+    // Extract text content and page type
     const contentText = typeof body.pageContent === 'string'
       ? body.pageContent
       : body.pageContent.text || JSON.stringify(body.pageContent)
 
+    const pageType = typeof body.pageContent === 'object' && body.pageContent.type
+      ? body.pageContent.type
+      : 'generic'
+
     // First, analyze the page to extract signals
     const analysisPrompt = ANALYSIS_PROMPT
+      .replace('{pageType}', pageType)
       .replace('{url}', body.pageUrl || 'Unknown')
       .replace('{title}', body.pageTitle || 'Unknown')
       .replace('{content}', contentText.substring(0, 10000))

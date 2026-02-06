@@ -16,6 +16,18 @@ let pageContent = null;
 let pageData = null;
 let analysisResult = null;
 
+// Page type labels
+const PAGE_TYPE_LABELS = {
+  'linkedin_job': '💼 LinkedIn Oglas za posao',
+  'linkedin_company': '🏢 LinkedIn Kompanija',
+  'linkedin_profile': '👤 LinkedIn Profil',
+  'linkedin_other': '🔗 LinkedIn',
+  'hiring_page': '📋 Stranica za zapošljavanje',
+  'company_about': '🏢 O kompaniji',
+  'company_homepage': '🌐 Homepage kompanije',
+  'generic': '📄 Opšta stranica'
+};
+
 // Initialize popup
 async function init() {
   try {
@@ -30,6 +42,9 @@ async function init() {
     const response = await chrome.tabs.sendMessage(tab.id, { action: 'getPageContent' });
     if (response && response.content) {
       pageContent = response.content;
+      // Show detected page type
+      const typeLabel = PAGE_TYPE_LABELS[pageContent.type] || PAGE_TYPE_LABELS['generic'];
+      pageUrl.textContent = `${new URL(tab.url).hostname} • ${typeLabel}`;
     }
   } catch (err) {
     console.error('Init error:', err);
