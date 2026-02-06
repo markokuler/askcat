@@ -612,20 +612,33 @@ export default function Home() {
     setOutreachLoading(true)
 
     // Build the outreach prompt using the conversation context
-    const outreachPrompt = `Na osnovu prethodnog razgovora i pronađenih kapaciteta, napiši personalizovan outreach email.
+    const outreachPrompt = `Napiši cold outreach email za ${data.company}.
 
-DETALJI O PROSPECTU:
-- Kompanija: ${data.company}
+KONTEKST:
 - Njihova potreba: ${data.need}
-${data.contact ? `- Kontakt: ${data.contact}` : ''}
+${data.contact ? `- Prima: ${data.contact}` : ''}
+- Koristi ljude i projekte iz prethodnog odgovora
 
-INSTRUKCIJE:
-1. Napiši kratak, direktan email (max 150 reči)
-2. Pomeni konkretne ljude i projekte iz prethodnog odgovora
-3. Uključi relevantne metrike i rezultate
-4. Završi sa clear call-to-action (kratki poziv)
-5. Ton: profesionalan ali human, bez korporativnog žargona
-6. Format: Samo tekst emaila, bez Subject linije`
+FORMAT (striktno):
+Subject: [jedna rečenica sa konkretnom vrednošću]
+
+[Pozdrav]
+
+[1 rečenica: šta smo uradili za sličnog klijenta + konkretan rezultat]
+
+[1 rečenica: kako to rešava njihovu potrebu]
+
+[CTA: konkretan predlog za sledeći korak - poziv ili demo]
+
+[Potpis]
+
+PRAVILA:
+- Max 60 reči u telu emaila
+- Počni sa rezultatom, ne sa nama
+- Jedan konkretan broj/metrika iz naših projekata
+- Bez "mi smo...", "naša kompanija...", "želeo bih..."
+- Bez buzzwords (synergy, leverage, solutions)
+- CTA = konkretno vreme (npr. "15 min sledeće nedelje?")`
 
     const outreachMessage: Message = { role: 'user', content: outreachPrompt }
     const newMessages = [...messages, outreachMessage]
