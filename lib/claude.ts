@@ -1,9 +1,17 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { SearchResult, formatSearchResults } from './vectorstore'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
+// Lazy initialization to avoid build-time errors
+let _anthropic: Anthropic | null = null
+
+function getAnthropic(): Anthropic {
+  if (!_anthropic) {
+    _anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    })
+  }
+  return _anthropic
+}
 
 const SYSTEM_PROMPT = `You are AskCat, a sales intelligence assistant for SmartCat consulting company.
 
@@ -52,7 +60,7 @@ CONTEXT FROM KNOWLEDGE BASE:
 ${contextText}
 ---`
 
-  const response = await anthropic.messages.create({
+  const response = await getAnthropic().messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 1024,
     system: systemPrompt,
