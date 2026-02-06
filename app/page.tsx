@@ -283,7 +283,133 @@ function ProjectCard({ name, content }: { name: string; content: string }) {
   )
 }
 
+// Email Card Component
+function EmailCard({ content }: { content: string }) {
+  const [copied, setCopied] = useState(false)
+
+  // Parse Subject line and body
+  const subjectMatch = content.match(/^Subject:\s*(.+?)(?:\n|$)/im)
+  const subject = subjectMatch ? subjectMatch[1].trim() : ''
+  const body = content
+    .replace(/^Subject:\s*.+?\n/im, '')
+    .trim()
+
+  // Format body - split into paragraphs and highlight key elements
+  const formatBody = (text: string) => {
+    const paragraphs = text.split(/\n\n+/).filter(p => p.trim())
+
+    return paragraphs.map((para, idx) => {
+      // Clean up the paragraph
+      let cleaned = para.trim()
+
+      // Bold text between ** **
+      const parts: React.ReactNode[] = []
+      const boldRegex = /\*\*(.+?)\*\*/g
+      let lastIndex = 0
+      let match
+
+      while ((match = boldRegex.exec(cleaned)) !== null) {
+        if (match.index > lastIndex) {
+          parts.push(cleaned.slice(lastIndex, match.index))
+        }
+        parts.push(<strong key={match.index} className="font-semibold text-gray-900">{match[1]}</strong>)
+        lastIndex = match.index + match[0].length
+      }
+      if (lastIndex < cleaned.length) {
+        parts.push(cleaned.slice(lastIndex))
+      }
+
+      // Check if it's a greeting or signature (short line)
+      const isGreeting = idx === 0 && cleaned.length < 30
+      const isSignature = idx === paragraphs.length - 1 && cleaned.length < 50 && !cleaned.includes('.')
+
+      return (
+        <p
+          key={idx}
+          className={`${
+            isGreeting ? 'text-gray-600' :
+            isSignature ? 'text-gray-600 font-medium' :
+            'text-gray-800'
+          } ${idx > 0 ? 'mt-4' : ''}`}
+        >
+          {parts.length > 0 ? parts : cleaned}
+        </p>
+      )
+    })
+  }
+
+  const handleCopy = async () => {
+    const fullEmail = `Subject: ${subject}\n\n${body}`
+    await navigator.clipboard.writeText(fullEmail)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="my-4 rounded-2xl overflow-hidden border-2 border-emerald-200 shadow-lg shadow-emerald-100/50">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <span className="text-white font-semibold text-sm">Outreach Email</span>
+        </div>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-colors"
+        >
+          {copied ? (
+            <>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Kopirano!
+            </>
+          ) : (
+            <>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Kopiraj
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Subject */}
+      {subject && (
+        <div className="px-5 py-3 bg-emerald-50 border-b border-emerald-100">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Subject</span>
+          </div>
+          <p className="text-gray-900 font-semibold mt-1">{subject}</p>
+        </div>
+      )}
+
+      {/* Body */}
+      <div className="px-5 py-5 bg-white">
+        <div className="text-[15px] leading-relaxed">
+          {formatBody(body)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Check if content is an email
+function isEmailContent(content: string): boolean {
+  return /^Subject:/im.test(content) || content.includes('📧 Generiši outreach')
+}
+
 function FormattedResponse({ content }: { content: string }) {
+  // Check if this is an email response
+  if (isEmailContent(content)) {
+    return <EmailCard content={content} />
+  }
+
   const segments = parseResponse(content)
 
   return (
