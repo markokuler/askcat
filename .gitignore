@@ -37,8 +37,8 @@ yarn-error.log*
 # vercel
 .vercel
 
-# vector index
-.index/
+# vector index (included for Vercel deploy)
+# .index/
 
 # typescript
 *.tsbuildinfo
