@@ -485,18 +485,22 @@ export default function Prezentacija() {
       </section>
 
       {/* Build Time */}
-      <section className="py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-6" style={{ fontFamily: 'var(--font-display)' }}>
               Od nule do produkcije
             </h2>
-            <div className="inline-flex items-baseline gap-2 mt-4">
-              <span className="text-7xl font-bold bg-gradient-to-r from-cyan-400 via-emerald-400 to-amber-400 bg-clip-text text-transparent">~2</span>
-              <span className="text-2xl text-gray-400">sata</span>
+
+            {/* Hero stat */}
+            <div className="mb-10">
+              <span className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-cyan-400 via-emerald-400 to-amber-400 bg-clip-text text-transparent">~2</span>
+              <span className="text-3xl md:text-4xl text-gray-400 ml-3">sata</span>
             </div>
-            <div className="mt-4 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30">
-              <span className="text-xl">🤖</span>
+
+            {/* Claude Code badge */}
+            <div className="inline-flex items-center gap-4 px-6 py-4 rounded-2xl bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30">
+              <span className="text-3xl">🤖</span>
               <div className="text-left">
                 <p className="text-sm font-semibold text-orange-300">Izgrađeno sa Claude Code</p>
                 <p className="text-xs text-orange-400/70">Powered by Claude Opus 4.5</p>
