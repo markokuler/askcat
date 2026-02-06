@@ -6,7 +6,7 @@ import Link from 'next/link'
 const techStack = [
   { name: 'Next.js 15', desc: 'App Router, Server Actions', icon: '⚡', color: 'from-gray-700 to-black' },
   { name: 'Vectra', desc: 'Lokalni vector store', icon: '🔍', color: 'from-emerald-500 to-green-600' },
-  { name: 'Claude API', desc: 'claude-sonnet-4', icon: '🧠', color: 'from-orange-400 to-amber-500' },
+  { name: 'Claude API', desc: 'Claude Sonnet 4 (2025)', icon: '🧠', color: 'from-orange-400 to-amber-500' },
   { name: 'OpenAI', desc: 'text-embedding-3-small', icon: '🔮', color: 'from-violet-500 to-purple-600' },
   { name: 'TypeScript', desc: 'End-to-end type safety', icon: '📘', color: 'from-blue-500 to-cyan-500' },
   { name: 'Tailwind CSS', desc: 'Utility-first styling', icon: '🎨', color: 'from-cyan-500 to-teal-500' },
@@ -240,7 +240,7 @@ export default function Prezentacija() {
               <div>
                 <h4 className="font-semibold mb-3 text-amber-400">LLM Integration</h4>
                 <ul className="space-y-2 text-sm text-gray-300">
-                  <li>• Model: <code className="px-2 py-0.5 rounded bg-gray-800">claude-sonnet-4</code></li>
+                  <li>• Model: <code className="px-2 py-0.5 rounded bg-gray-800">claude-sonnet-4-20250514</code></li>
                   <li>• Max tokens: <code className="px-2 py-0.5 rounded bg-gray-800">1024</code></li>
                   <li>• System prompt sa format instrukcijama</li>
                   <li>• Citatni format: [TYPE:Name]</li>
