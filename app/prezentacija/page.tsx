@@ -657,7 +657,7 @@ export default function Prezentacija() {
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Image src="/logo-mark.svg" alt="SmartCat" width={28} height={24} />
-            <span className="text-sm text-[var(--foreground-muted)]">SmartCat © 2025</span>
+            <span className="text-sm text-[var(--foreground-muted)]">SmartCat © 2026</span>
           </div>
           <div className="text-sm text-[var(--foreground-muted)]">
             Next.js • Vectra • Claude AI • OpenAI Embeddings
