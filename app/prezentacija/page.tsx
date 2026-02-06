@@ -480,47 +480,6 @@ export default function Prezentacija() {
         </div>
       </section>
 
-      {/* Environment Variables */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: 'var(--font-display)' }}>
-              Konfiguracija
-            </h2>
-            <p className="text-[var(--foreground-muted)] text-lg">Environment variables u <code className="px-2 py-1 bg-gray-100 rounded">.env.local</code></p>
-          </div>
-
-          <div className="max-w-2xl mx-auto p-6 rounded-2xl bg-gray-900 text-gray-100">
-            <pre className="text-sm"><code>{`# Required API Keys
-ANTHROPIC_API_KEY=sk-ant-api03-...
-OPENAI_API_KEY=sk-proj-...
-
-# Optional: Google Drive sync
-# GOOGLE_SERVICE_ACCOUNT_EMAIL=...
-# GOOGLE_DRIVE_FOLDER_ID=...`}</code></pre>
-          </div>
-
-          <div className="mt-8 grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div className="p-6 rounded-xl bg-amber-50 border border-amber-200">
-              <h4 className="font-bold mb-2 text-amber-800">⚠️ API Costs</h4>
-              <ul className="text-sm text-amber-700 space-y-1">
-                <li>• OpenAI embeddings: ~$0.02 / 1M tokens</li>
-                <li>• Claude Sonnet: ~$3 / 1M input tokens</li>
-                <li>• Indexing 37 items: &lt;$0.01</li>
-              </ul>
-            </div>
-            <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-200">
-              <h4 className="font-bold mb-2 text-emerald-800">✓ No External DB</h4>
-              <ul className="text-sm text-emerald-700 space-y-1">
-                <li>• Vectra čuva index lokalno</li>
-                <li>• JSON fajlovi kao source of truth</li>
-                <li>• Zero infrastructure cost</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="py-20 bg-gray-50 border-t border-[var(--border)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
