@@ -69,11 +69,16 @@ async function analyzePage() {
   showLoading('Analiziram stranicu...');
 
   try {
+    // pageContent is an object with { type, metadata, text }
+    const contentToSend = typeof pageContent === 'string'
+      ? pageContent.substring(0, 15000)
+      : { ...pageContent, text: (pageContent.text || '').substring(0, 15000) };
+
     const response = await fetch(`${API_BASE}/api/analyze-page`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        pageContent: pageContent.substring(0, 15000), // Limit content size
+        pageContent: contentToSend,
         pageUrl: pageData.url,
         pageTitle: pageData.title
       })
@@ -170,11 +175,16 @@ async function generateOutreach() {
   showLoading('Generišem outreach email...');
 
   try {
+    // pageContent is an object with { type, metadata, text }
+    const contentToSend = typeof pageContent === 'string'
+      ? pageContent.substring(0, 15000)
+      : { ...pageContent, text: (pageContent.text || '').substring(0, 15000) };
+
     const response = await fetch(`${API_BASE}/api/analyze-page`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        pageContent: pageContent.substring(0, 15000),
+        pageContent: contentToSend,
         pageUrl: pageData.url,
         pageTitle: pageData.title,
         generateOutreach: true
