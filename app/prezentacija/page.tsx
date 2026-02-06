@@ -532,6 +532,13 @@ export default function Prezentacija() {
               <span className="text-3xl md:text-4xl text-gray-400">sata</span>
             </div>
             <p className="text-gray-500 mt-2">od praznog foldera do live URL-a</p>
+            <div className="mt-6 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30">
+              <span className="text-2xl">🤖</span>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-orange-300">Izgrađeno sa Claude Code</p>
+                <p className="text-xs text-orange-400/70">Powered by Claude Opus 4.5</p>
+              </div>
+            </div>
           </div>
 
           {/* Timeline breakdown */}
@@ -660,7 +667,7 @@ export default function Prezentacija() {
             <span className="text-sm text-[var(--foreground-muted)]">SmartCat © 2026</span>
           </div>
           <div className="text-sm text-[var(--foreground-muted)]">
-            Next.js • Vectra • Claude AI • OpenAI Embeddings
+            Next.js • Vectra • Claude Sonnet 4 • OpenAI Embeddings • Built with Claude Code (Opus 4.5)
           </div>
         </div>
       </footer>
