@@ -20,6 +20,52 @@ const queryFlow = [
   { step: '5', title: 'Response', desc: 'Odgovor + citati', icon: '✨', color: 'bg-cyan-500' },
 ]
 
+const dataTypes = [
+  {
+    type: 'Employees',
+    icon: '👥',
+    count: '15',
+    file: 'data/employees.json',
+    fields: ['id, name, role, department', 'skills: string[]', 'experience_years: number', 'certifications: string[]', 'bio: string'],
+    color: 'bg-cyan-50 border-cyan-200',
+  },
+  {
+    type: 'Repositories',
+    icon: '📦',
+    count: '12',
+    file: 'data/repositories.json',
+    fields: ['id, name, description', 'language, technologies[]', 'cloud, features[]', 'metrics: string', 'status: "production" | "dev"'],
+    color: 'bg-violet-50 border-violet-200',
+  },
+  {
+    type: 'Projects',
+    icon: '📋',
+    count: '10',
+    file: 'data/projects.json',
+    fields: ['id, name, client, industry', 'duration, value, status', 'technologies[], capabilities[]', 'outcomes: string[]', 'team_size, key_people[]'],
+    color: 'bg-amber-50 border-amber-200',
+  },
+]
+
+const fileStructure = [
+  { path: 'app/', desc: 'Next.js App Router', files: ['page.tsx - Chat UI', 'api/chat/route.ts - API endpoint', 'prezentacija/page.tsx'] },
+  { path: 'lib/', desc: 'Core libraries', files: ['vectorstore.ts - Vectra search', 'embeddings.ts - OpenAI embeddings', 'claude.ts - LLM integration'] },
+  { path: 'data/', desc: 'JSON data sources', files: ['employees.json', 'repositories.json', 'projects.json'] },
+  { path: 'scripts/', desc: 'CLI tools', files: ['index-data.ts - Generiši embeddings'] },
+  { path: '.index/', desc: 'Vectra index', files: ['index.json - Vector store (~2.3MB)'] },
+]
+
+const timeline = [
+  { time: "5'", title: 'Setup', desc: 'Next.js + dependencies + env config', color: 'bg-cyan-500' },
+  { time: "15'", title: 'Mock podaci', desc: '15 employees, 12 repos, 10 projects', color: 'bg-cyan-600' },
+  { time: "10'", title: 'Vector indexiranje', desc: 'Embeddings script + Vectra store', color: 'bg-emerald-500' },
+  { time: "15'", title: 'RAG API', desc: 'Search + Claude integration + citations', color: 'bg-emerald-600' },
+  { time: "10'", title: 'Chat UI', desc: 'Input, messages, entity cards', color: 'bg-teal-500' },
+  { time: "15'", title: 'Outreach generator', desc: 'Modal + personalizovani email', color: 'bg-amber-500' },
+  { time: "20'", title: 'Prezentacija', desc: 'Ova stranica + dokumentacija', color: 'bg-amber-600' },
+  { time: "15'", title: 'Deploy', desc: 'Vercel + env vars + bug fixes', color: 'bg-pink-500' },
+]
+
 export default function Prezentacija() {
   return (
     <div className="min-h-screen bg-[var(--background)]">
@@ -307,6 +353,137 @@ export default function Prezentacija() {
         </div>
       </section>
 
+      {/* Data Schema */}
+      <section className="py-16 bg-white border-b border-[var(--border)]">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+              Data Schema
+            </h2>
+            <p className="text-[var(--foreground-muted)]">JSON fajlovi u <code className="px-2 py-1 bg-gray-100 rounded text-sm">data/</code> folderu</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {dataTypes.map((data) => (
+              <div key={data.type} className={`p-5 rounded-2xl border-2 ${data.color}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{data.icon}</span>
+                    <h3 className="font-bold text-lg">{data.type}</h3>
+                  </div>
+                  <span className="px-2 py-1 rounded-full bg-white text-sm font-bold">{data.count}</span>
+                </div>
+                <code className="text-xs text-gray-500 block mb-3">{data.file}</code>
+                <ul className="space-y-1">
+                  {data.fields.map((field, idx) => (
+                    <li key={idx} className="text-xs font-mono bg-white/60 px-2 py-1 rounded">
+                      {field}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* JSON Example */}
+          <div className="mt-8 p-5 rounded-2xl bg-gray-900 text-gray-100 overflow-x-auto">
+            <h4 className="font-bold mb-3 text-cyan-400 text-sm">📄 Primer: employees.json</h4>
+            <pre className="text-xs text-gray-300"><code>{`{
+  "id": "emp-001",
+  "name": "Milan Petrović",
+  "role": "Senior ML Engineer",
+  "department": "AI/ML",
+  "skills": ["Python", "TensorFlow", "PyTorch", "Kafka"],
+  "experience_years": 8,
+  "certifications": ["AWS ML Specialty"],
+  "bio": "Expert in building production ML pipelines..."
+}`}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      {/* File Structure */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+              Struktura projekta
+            </h2>
+            <p className="text-[var(--foreground-muted)]">Minimalna Next.js aplikacija</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {fileStructure.map((folder) => (
+              <div key={folder.path} className="p-4 rounded-xl bg-gray-900 text-gray-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-amber-400">📁</span>
+                  <code className="text-cyan-400 font-bold text-sm">{folder.path}</code>
+                </div>
+                <p className="text-xs text-gray-500 mb-2">{folder.desc}</p>
+                <ul className="space-y-1">
+                  {folder.files.map((file, idx) => (
+                    <li key={idx} className="text-xs text-gray-400 flex items-center gap-2">
+                      <span className="text-gray-600">└</span>
+                      <code>{file}</code>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Commands */}
+          <div className="mt-6 p-5 rounded-2xl bg-gray-900 text-gray-100">
+            <h4 className="font-bold mb-3 text-cyan-400 text-sm">⌨️ CLI Commands</h4>
+            <div className="grid md:grid-cols-3 gap-3 text-sm">
+              <div className="p-3 rounded-lg bg-gray-800">
+                <code className="text-emerald-400">npm run dev</code>
+                <p className="text-gray-500 text-xs mt-1">Start dev server</p>
+              </div>
+              <div className="p-3 rounded-lg bg-gray-800">
+                <code className="text-emerald-400">npm run index</code>
+                <p className="text-gray-500 text-xs mt-1">Generiši embeddings</p>
+              </div>
+              <div className="p-3 rounded-lg bg-gray-800">
+                <code className="text-emerald-400">npm run build</code>
+                <p className="text-gray-500 text-xs mt-1">Production build</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Environment & Costs */}
+      <section className="py-16 bg-white border-b border-[var(--border)]">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+              Konfiguracija
+            </h2>
+            <p className="text-[var(--foreground-muted)]">Environment variables u <code className="px-2 py-1 bg-gray-100 rounded text-sm">.env.local</code></p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="p-5 rounded-xl bg-amber-50 border border-amber-200">
+              <h4 className="font-bold mb-2 text-amber-800">⚠️ API Costs</h4>
+              <ul className="text-sm text-amber-700 space-y-1">
+                <li>• OpenAI embeddings: ~$0.02 / 1M tokens</li>
+                <li>• Claude Sonnet: ~$3 / 1M input tokens</li>
+                <li>• Indexing 37 items: &lt;$0.01</li>
+              </ul>
+            </div>
+            <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-200">
+              <h4 className="font-bold mb-2 text-emerald-800">✓ No External DB</h4>
+              <ul className="text-sm text-emerald-700 space-y-1">
+                <li>• Vectra čuva index lokalno</li>
+                <li>• JSON fajlovi kao source of truth</li>
+                <li>• Zero infrastructure cost</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Build Time */}
       <section className="py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -327,8 +504,28 @@ export default function Prezentacija() {
             </div>
           </div>
 
+          {/* Timeline */}
+          <div className="max-w-3xl mx-auto mb-12">
+            <div className="relative">
+              <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-500 via-emerald-500 to-amber-500" />
+              <div className="space-y-4">
+                {timeline.map((item, idx) => (
+                  <div key={idx} className="relative flex items-start gap-4">
+                    <div className={`w-10 h-10 rounded-full ${item.color} flex items-center justify-center text-sm font-bold shrink-0 z-10`}>
+                      {item.time}
+                    </div>
+                    <div className="pt-2">
+                      <h4 className="font-bold text-sm">{item.title}</h4>
+                      <p className="text-gray-400 text-xs">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-5 rounded-xl bg-white/5 border border-white/10 text-center">
               <div className="text-2xl font-bold text-cyan-400">37</div>
               <div className="text-xs text-gray-500">entiteta</div>
