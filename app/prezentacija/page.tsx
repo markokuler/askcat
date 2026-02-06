@@ -511,6 +511,126 @@ export default function Prezentacija() {
         </div>
       </section>
 
+      {/* Build Time */}
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6">
+              <span>⚡</span>
+              <span className="text-sm font-medium">Rapid Development</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: 'var(--font-display)' }}>
+              Od nule do produkcije
+            </h2>
+            <p className="text-gray-400 text-lg">Koliko je vremena trebalo za ceo projekat?</p>
+          </div>
+
+          {/* Big number */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-baseline gap-2">
+              <span className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-cyan-400 via-emerald-400 to-amber-400 bg-clip-text text-transparent">~2</span>
+              <span className="text-3xl md:text-4xl text-gray-400">sata</span>
+            </div>
+            <p className="text-gray-500 mt-2">od praznog foldera do live URL-a</p>
+          </div>
+
+          {/* Timeline breakdown */}
+          <div className="max-w-4xl mx-auto">
+            <div className="relative">
+              {/* Vertical line */}
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-500 via-emerald-500 to-amber-500" />
+
+              {/* Timeline items */}
+              <div className="space-y-6">
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-cyan-500 flex items-center justify-center text-lg font-bold shrink-0 z-10">5&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-cyan-400">Setup</h4>
+                    <p className="text-gray-400 text-sm">Next.js + dependencies + env config</p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-lg font-bold shrink-0 z-10">15&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-cyan-400">Mock podaci</h4>
+                    <p className="text-gray-400 text-sm">15 employees, 12 repos, 10 projects</p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-lg font-bold shrink-0 z-10">10&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-emerald-400">Vector indexiranje</h4>
+                    <p className="text-gray-400 text-sm">Embeddings script + Vectra store</p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-emerald-600 flex items-center justify-center text-lg font-bold shrink-0 z-10">15&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-emerald-400">RAG API</h4>
+                    <p className="text-gray-400 text-sm">Search + Claude integration + citations</p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-teal-500 flex items-center justify-center text-lg font-bold shrink-0 z-10">10&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-teal-400">Chat UI</h4>
+                    <p className="text-gray-400 text-sm">Input, messages, entity cards</p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-lg font-bold shrink-0 z-10">15&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-amber-400">Outreach generator</h4>
+                    <p className="text-gray-400 text-sm">Modal + personalizovani email</p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-amber-600 flex items-center justify-center text-lg font-bold shrink-0 z-10">20&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-amber-400">Prezentacija</h4>
+                    <p className="text-gray-400 text-sm">Ova stranica + tehnička dokumentacija</p>
+                  </div>
+                </div>
+
+                <div className="relative flex items-start gap-6">
+                  <div className="w-12 h-12 rounded-full bg-pink-500 flex items-center justify-center text-lg font-bold shrink-0 z-10">15&apos;</div>
+                  <div className="pt-2">
+                    <h4 className="font-bold text-pink-400">Deploy</h4>
+                    <p className="text-gray-400 text-sm">Vercel + env vars + bug fixes</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-cyan-400">37</div>
+              <div className="text-sm text-gray-500">entiteta indexirano</div>
+            </div>
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-emerald-400">6</div>
+              <div className="text-sm text-gray-500">core fajlova</div>
+            </div>
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-amber-400">0</div>
+              <div className="text-sm text-gray-500">eksterne baze</div>
+            </div>
+            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+              <div className="text-3xl font-bold text-pink-400">Live</div>
+              <div className="text-sm text-gray-500">na Vercel-u</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-20 bg-gray-50 border-t border-[var(--border)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
