@@ -1,26 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* SmartCat Brand Colors */
+  --smartcat-cyan: #00a0dc;
+  --smartcat-blue: #0073bb;
+  --smartcat-cyan-light: #e6f7fc;
+  --smartcat-cyan-medium: #b3e6f7;
+
+  /* Light Theme - Fresh & Bright */
+  --background: #fafcfd;
+  --background-secondary: #ffffff;
+  --background-tertiary: #f0f7fa;
+  --foreground: #1a2b3c;
+  --foreground-muted: #5a7184;
+  --border: #e2eaef;
+  --border-light: #d0dfe6;
+
+  /* Accent */
+  --accent: #00a0dc;
+  --accent-hover: #008bc2;
+  --accent-subtle: rgba(0, 160, 220, 0.08);
+  --accent-light: #e6f7fc;
+
+  /* Warm accent for variety */
+  --warm: #ff9f43;
+  --warm-subtle: rgba(255, 159, 67, 0.1);
+
+  /* Status */
+  --success: #10b981;
+  --success-subtle: rgba(16, 185, 129, 0.1);
+  --warning: #f59e0b;
+  --error: #ef4444;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground-muted);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-light);
+  color: var(--smartcat-blue);
+}
+
+/* Focus Ring */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes typing {
+  0%, 60%, 100% { transform: scale(0.8); opacity: 0.4; }
+  30% { transform: scale(1); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Staggered animations */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+
+/* Gradient backgrounds */
+.bg-gradient-fresh {
+  background:
+    radial-gradient(ellipse at 0% 0%, var(--accent-light) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, var(--warm-subtle) 0%, transparent 40%),
+    var(--background);
+}
+
+.bg-gradient-hero {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--background) 50%, var(--warm-subtle) 100%);
+}
+
+/* Card styles */
+.card-elevated {
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.card-elevated:hover {
+  border-color: var(--accent);
+  box-shadow:
+    0 1px 3px rgba(0, 160, 220, 0.08),
+    0 8px 24px rgba(0, 160, 220, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Typing indicator */
+.typing-dot {
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* Button shine effect */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-shine:hover::after {
+  left: 100%;
+}
+
+/* Logo container glow */
+.logo-glow {
+  filter: drop-shadow(0 0 20px rgba(0, 160, 220, 0.2));
 }

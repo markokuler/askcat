@@ -1,13 +1,6 @@
-# 🐱 AskCat - Sales Intelligence Assistant
+# AskCat - Sales Intelligence Assistant
 
-AI-powered assistant that helps sales reps quickly find information about team capabilities, technical expertise, and past projects.
-
-## Features
-
-- **Semantic Search** - Vector search across employees, repositories, and projects
-- **Claude AI Responses** - Intelligent answers with cited sources
-- **Google Drive Integration** - Keep your data in Drive, sync automatically
-- **Supabase Backend** - pgvector for production-ready vector search
+AI-powered sales intelligence tool that helps sales representatives find the right people, projects, and technologies for deals.
 
 ## Tech Stack
 
@@ -15,68 +8,108 @@ AI-powered assistant that helps sales reps quickly find information about team c
 - **Tailwind CSS** - Styling
 - **Claude API** - AI reasoning
 - **OpenAI Embeddings** - text-embedding-3-small
-- **Supabase** - pgvector for vector search
-- **Google Drive API** - Data source
+- **Vectra** - Local vector store (no external database)
+
+## Features
+
+- Chat interface for natural language queries
+- Vector search across 3 data sources:
+  - Employees (skills, experience, certifications)
+  - Repositories (technologies, features, metrics)
+  - Projects (clients, outcomes, technologies)
+- Claude generates responses with cited sources
+- Beautiful cards for employees, repos, and projects
 
 ## Setup
 
-### 1. Create Supabase Project
-
-1. Go to [supabase.com](https://supabase.com) and create a new project
-2. Enable the `vector` extension in SQL Editor:
-   ```sql
-   CREATE EXTENSION IF NOT EXISTS vector;
-   ```
-3. Run the migration from `supabase/migrations/001_initial_schema.sql`
-4. Copy your project URL and keys
-
-### 2. Set Up Google Drive
-
-1. Create a Google Cloud project
-2. Enable Google Drive API
-3. Create a Service Account and download the JSON key
-4. Create a folder in Google Drive
-5. Share the folder with your service account email
-6. Add these JSON files to the folder:
-   - `employees.json`
-   - `repositories.json`
-   - `projects.json`
-
-### 3. Configure Environment
-
-Copy `.env.local.example` to `.env.local` and fill in:
-
+1. Install dependencies:
 ```bash
-# API Keys
+npm install
+```
+
+2. Create `.env.local` from example:
+```bash
+cp .env.local.example .env.local
+```
+
+3. Add your API keys to `.env.local`:
+```env
 ANTHROPIC_API_KEY=sk-ant-...
 OPENAI_API_KEY=sk-...
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
-
-# Google Drive
-GOOGLE_SERVICE_ACCOUNT_EMAIL=askcat@your-project.iam.gserviceaccount.com
-GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-GOOGLE_DRIVE_FOLDER_ID=1abc...xyz
 ```
 
-### 4. Sync Data
-
+4. Index the data (run once, or when data changes):
 ```bash
-npm run sync
+npm run index
 ```
 
-This fetches data from Google Drive, generates embeddings, and stores in Supabase.
-
-### 5. Run Development Server
-
+5. Start the dev server:
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) to use AskCat.
+
+## Data Structure
+
+Data is stored in `data/` folder:
+
+- `employees.json` - Employee profiles with skills, experience, certifications
+- `repositories.json` - Code repositories with technologies, features, metrics
+- `projects.json` - Past projects with clients, outcomes, team info
+
+## How it Works
+
+1. **Indexing**: `npm run index` creates embeddings for all data and stores them in `.index/` folder
+2. **Query**: User asks a question in the chat
+3. **Search**: Query is embedded and searched against the Vectra index
+4. **Context**: Top 5 most relevant results are passed to Claude
+5. **Response**: Claude generates a response with cited sources in structured format
+
+## API Endpoint
+
+`POST /api/chat`
+
+Request:
+```json
+{
+  "messages": [
+    { "role": "user", "content": "Who has ML experience?" }
+  ]
+}
+```
+
+Response:
+```json
+{
+  "response": "[EMPLOYEE:Name] Description...",
+  "sources": [
+    { "type": "employee", "name": "Name", "score": 0.85 }
+  ]
+}
+```
+
+## Project Structure
+
+```
+askcat/
+├── app/
+│   ├── page.tsx              # Chat UI
+│   ├── layout.tsx            # App layout
+│   ├── globals.css           # Styles
+│   └── api/chat/route.ts     # Chat API endpoint
+├── lib/
+│   ├── embeddings.ts         # OpenAI embeddings
+│   ├── vectorstore.ts        # Vectra search
+│   └── claude.ts             # Claude API
+├── data/
+│   ├── employees.json
+│   ├── repositories.json
+│   └── projects.json
+├── scripts/
+│   └── index-data.ts         # Indexing script
+└── .index/                   # Vectra index (generated)
+```
 
 ## Data Format
 
@@ -86,7 +119,7 @@ Open [http://localhost:3000](http://localhost:3000)
 [
   {
     "id": "emp-001",
-    "name": "Milan Petrović",
+    "name": "Milan Petrovic",
     "role": "Senior ML Engineer",
     "department": "AI/ML",
     "skills": ["Python", "TensorFlow", "PyTorch"],
@@ -136,16 +169,6 @@ Open [http://localhost:3000](http://localhost:3000)
   }
 ]
 ```
-
-## Deployment
-
-Deploy to Vercel:
-
-```bash
-vercel
-```
-
-Set environment variables in Vercel dashboard.
 
 ## License
 

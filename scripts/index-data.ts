@@ -2,6 +2,10 @@ import { LocalIndex } from 'vectra'
 import OpenAI from 'openai'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as dotenv from 'dotenv'
+
+// Load environment variables from .env.local
+dotenv.config({ path: path.join(process.cwd(), '.env.local') })
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

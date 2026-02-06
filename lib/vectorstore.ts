@@ -1,30 +1,47 @@
-import { getSupabaseAdmin, SearchResult } from './supabase'
+import { LocalIndex, QueryResult } from 'vectra'
+import * as path from 'path'
 import { createEmbedding } from './embeddings'
 
-export type { SearchResult }
+export interface SearchResult {
+  id: string
+  type: 'employee' | 'repository' | 'project'
+  name: string
+  content: string
+  similarity: number
+}
+
+// Lazy initialization of Vectra index
+let _index: LocalIndex | null = null
+
+function getIndex(): LocalIndex {
+  if (!_index) {
+    const indexPath = path.join(process.cwd(), '.index')
+    _index = new LocalIndex(indexPath)
+  }
+  return _index
+}
 
 export async function search(query: string, topK: number = 5): Promise<SearchResult[]> {
-  // Generate embedding for the query
-  const queryEmbedding = await createEmbedding(query)
+  const index = getIndex()
 
-  // Search using Supabase function
-  const supabase = getSupabaseAdmin()
-  const { data, error } = await supabase.rpc('search_knowledge_base', {
-    query_embedding: queryEmbedding,
-    match_count: topK,
-  })
-
-  if (error) {
-    console.error('Search error:', error)
+  // Check if index exists
+  if (!(await index.isIndexCreated())) {
+    console.error('Index not created. Run: npx tsx scripts/index-data.ts')
     return []
   }
 
-  return (data || []).map((item: SearchResult) => ({
-    id: item.id,
-    type: item.type as 'employee' | 'repository' | 'project',
-    name: item.name,
-    content: item.content,
-    similarity: item.similarity,
+  // Generate embedding for the query
+  const queryEmbedding = await createEmbedding(query)
+
+  // Search the index (vector, query string, topK)
+  const results = await index.queryItems(queryEmbedding, query, topK)
+
+  return results.map((item: QueryResult<Record<string, unknown>>) => ({
+    id: item.item.id,
+    type: item.item.metadata.type as 'employee' | 'repository' | 'project',
+    name: item.item.metadata.name as string,
+    content: item.item.metadata.text as string,
+    similarity: item.score,
   }))
 }
 
