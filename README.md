@@ -1,137 +1,163 @@
-# AskCat - Sales Intelligence Assistant
+<p align="center">
+  <img src="public/logo-mark.svg" alt="AskCat" width="80" height="70" />
+</p>
 
-AI-powered sales intelligence tool that helps sales representatives find the right people, projects, and technologies for deals.
+<h1 align="center">AskCat</h1>
 
-## Tech Stack
+<p align="center">
+  <strong>AI-powered sales intelligence assistant with semantic search and outreach generation</strong>
+</p>
 
-- **Next.js 15** - App Router
-- **Tailwind CSS** - Styling
-- **Claude API** - AI reasoning
-- **OpenAI Embeddings** - text-embedding-3-small
-- **Vectra** - Local vector store (no external database)
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#how-it-works">How It Works</a> •
+  <a href="#api-reference">API</a> •
+  <a href="#configuration">Configuration</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Claude-Sonnet_4-orange?logo=anthropic" alt="Claude" />
+  <img src="https://img.shields.io/badge/OpenAI-Embeddings-green?logo=openai" alt="OpenAI" />
+</p>
+
+---
+
+## Overview
+
+AskCat helps sales teams instantly find relevant people, projects, and technical capabilities using natural language queries. It uses RAG (Retrieval-Augmented Generation) to search through your company's knowledge base and generate contextual responses with cited sources.
+
+**Key differentiators:**
+- No external database required (uses local Vectra vector store)
+- One-click personalized outreach email generation
+- Structured responses with visual entity cards
 
 ## Features
 
-- Chat interface for natural language queries
-- Vector search across 3 data sources:
-  - Employees (skills, experience, certifications)
-  - Repositories (technologies, features, metrics)
-  - Projects (clients, outcomes, technologies)
-- Claude generates responses with cited sources
-- Beautiful cards for employees, repos, and projects
+- **Semantic Search** — Query employees, repositories, and projects using natural language
+- **RAG Pipeline** — Vector embeddings + Claude for accurate, cited responses
+- **Outreach Generation** — Generate personalized sales emails from search results
+- **Visual Cards** — Color-coded cards for different entity types (employees, repos, projects)
+- **Zero Infrastructure** — Local vector store, no database setup required
 
-## Setup
+## Quick Start
 
-1. Install dependencies:
+### Prerequisites
+
+- Node.js 18+
+- Anthropic API key
+- OpenAI API key
+
+### Installation
+
 ```bash
+# Clone the repository
+git clone https://github.com/markokuler/askcat.git
+cd askcat
+
+# Install dependencies
 npm install
-```
 
-2. Create `.env.local` from example:
-```bash
+# Configure environment
 cp .env.local.example .env.local
-```
+# Edit .env.local and add your API keys
 
-3. Add your API keys to `.env.local`:
-```env
-ANTHROPIC_API_KEY=sk-ant-...
-OPENAI_API_KEY=sk-...
-```
-
-4. Index the data (run once, or when data changes):
-```bash
+# Generate vector embeddings
 npm run index
-```
 
-5. Start the dev server:
-```bash
+# Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to use AskCat.
+Open [http://localhost:3000](http://localhost:3000)
 
-## Data Structure
+## How It Works
 
-Data is stored in `data/` folder:
-
-- `employees.json` - Employee profiles with skills, experience, certifications
-- `repositories.json` - Code repositories with technologies, features, metrics
-- `projects.json` - Past projects with clients, outcomes, team info
-
-## How it Works
-
-1. **Indexing**: `npm run index` creates embeddings for all data and stores them in `.index/` folder
-2. **Query**: User asks a question in the chat
-3. **Search**: Query is embedded and searched against the Vectra index
-4. **Context**: Top 5 most relevant results are passed to Claude
-5. **Response**: Claude generates a response with cited sources in structured format
-
-## API Endpoint
-
-`POST /api/chat`
-
-Request:
-```json
-{
-  "messages": [
-    { "role": "user", "content": "Who has ML experience?" }
-  ]
-}
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Query     │────▶│  Embedding  │────▶│   Vector    │────▶│   Context   │────▶│  Response   │
+│  (user)     │     │  (OpenAI)   │     │   Search    │     │  (Top 5)    │     │  (Claude)   │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
 ```
 
-Response:
-```json
-{
-  "response": "[EMPLOYEE:Name] Description...",
-  "sources": [
-    { "type": "employee", "name": "Name", "score": 0.85 }
-  ]
-}
-```
+1. User submits a natural language query
+2. Query is converted to a 1536-dimensional vector using OpenAI embeddings
+3. Vectra performs cosine similarity search against indexed data
+4. Top 5 results are passed as context to Claude
+5. Claude generates a structured response with `[EMPLOYEE:Name]`, `[REPO:name]`, `[PROJECT:Name]` citations
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Vector Store | Vectra (local) |
+| Embeddings | OpenAI `text-embedding-3-small` |
+| LLM | Claude Sonnet 4 |
 
 ## Project Structure
 
 ```
 askcat/
 ├── app/
-│   ├── page.tsx              # Chat UI
-│   ├── layout.tsx            # App layout
-│   ├── globals.css           # Styles
-│   └── api/chat/route.ts     # Chat API endpoint
+│   ├── page.tsx                 # Chat UI with outreach modal
+│   ├── api/chat/route.ts        # Chat API endpoint
+│   └── prezentacija/page.tsx    # Technical presentation
 ├── lib/
-│   ├── embeddings.ts         # OpenAI embeddings
-│   ├── vectorstore.ts        # Vectra search
-│   └── claude.ts             # Claude API
+│   ├── vectorstore.ts           # Vectra search implementation
+│   ├── embeddings.ts            # OpenAI embeddings wrapper
+│   └── claude.ts                # Claude API integration
 ├── data/
-│   ├── employees.json
-│   ├── repositories.json
-│   └── projects.json
+│   ├── employees.json           # Employee profiles
+│   ├── repositories.json        # Code repositories
+│   └── projects.json            # Past projects
 ├── scripts/
-│   └── index-data.ts         # Indexing script
-└── .index/                   # Vectra index (generated)
+│   └── index-data.ts            # Embedding generation script
+└── .index/                      # Vectra index (generated)
 ```
 
-## Data Format
+## Configuration
 
-### employees.json
+### Environment Variables
+
+Create `.env.local` with:
+
+```env
+# Required
+ANTHROPIC_API_KEY=sk-ant-api03-...
+OPENAI_API_KEY=sk-proj-...
+```
+
+### Data Files
+
+Add your data to `data/` folder in JSON format:
+
+<details>
+<summary><code>employees.json</code></summary>
 
 ```json
 [
   {
     "id": "emp-001",
-    "name": "Milan Petrovic",
+    "name": "Milan Petrović",
     "role": "Senior ML Engineer",
     "department": "AI/ML",
     "skills": ["Python", "TensorFlow", "PyTorch"],
     "experience_years": 8,
     "certifications": ["AWS ML Specialty"],
     "languages": ["Serbian", "English"],
-    "bio": "Expert in building production ML pipelines..."
+    "bio": "Expert in production ML pipelines..."
   }
 ]
 ```
+</details>
 
-### repositories.json
+<details>
+<summary><code>repositories.json</code></summary>
 
 ```json
 [
@@ -148,28 +174,74 @@ askcat/
   }
 ]
 ```
+</details>
 
-### projects.json
+<details>
+<summary><code>projects.json</code></summary>
 
 ```json
 [
   {
     "id": "proj-001",
-    "name": "Digital Banking Transformation",
-    "client": "Regional Bank (NDA)",
-    "industry": "Financial Services",
-    "duration": "18 months",
-    "value": "$2.5M",
+    "name": "Fraud Detection Platform",
+    "client": "Fortune 500 Payment Processor",
+    "industry": "FinTech",
+    "duration": "12 months",
+    "value": "$1.8M",
     "status": "completed",
-    "description": "Complete digital transformation...",
-    "technologies": ["React Native", "Spring Boot", "AWS"],
-    "capabilities": ["Mobile Development", "Backend Engineering"],
-    "outcomes": ["2M+ app downloads", "50% reduction in branch visits"],
-    "team_size": 15
+    "description": "Real-time ML-powered fraud detection",
+    "technologies": ["TensorFlow", "Kafka", "AWS"],
+    "capabilities": ["Machine Learning", "Real-time Processing"],
+    "outcomes": ["$50M+ fraud prevented annually"],
+    "team_size": 8
   }
 ]
 ```
+</details>
+
+## API Reference
+
+### POST /api/chat
+
+Send a chat message and receive AI-generated response with sources.
+
+**Request:**
+
+```json
+{
+  "messages": [
+    { "role": "user", "content": "Who has experience with ML pipelines?" }
+  ]
+}
+```
+
+**Response:**
+
+```json
+{
+  "response": "[EMPLOYEE:Milan Petrović] Senior ML Engineer with 8 years experience...",
+  "sources": [
+    { "type": "employee", "name": "Milan Petrović", "score": 0.89 },
+    { "type": "repository", "name": "fraud-detection", "score": 0.76 }
+  ]
+}
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run index` | Generate vector embeddings |
+| `npm run start` | Start production server |
 
 ## License
 
 MIT
+
+---
+
+<p align="center">
+  Built with <a href="https://nextjs.org">Next.js</a>, <a href="https://github.com/Stevenic/vectra">Vectra</a>, and <a href="https://anthropic.com">Claude</a>
+</p>
